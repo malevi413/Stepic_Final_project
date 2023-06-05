@@ -10,16 +10,18 @@ class ProductPage(BasePage):
         button_add_to_basket = self.browser.find_element(*ProductPageLocators.BTN_ADD_TO_BASKET)
         button_add_to_basket.click()
 
+    def should_be_add_product_button(self):
+        assert self.is_element_present(*ProductPageLocators.BTN_ADD_TO_BASKET), "Add button is not presented"
+
+
     def should_be_message_about_adding(self):
         # Проверяем, что название товара присутствует в сообщении о добавлении
         product_name_page = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME).text
         product_name_basket = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME_BASKET).text
         assert product_name_basket == product_name_page, \
             f"Product names in page and basket are not the same! {product_name_page} != {product_name_basket}"
-        # Проверяем, что название товара присутствует в сообщении о добавлении
         # print(product_name_page)
         # print(product_name_basket)
-
 
     def should_be_message_basket_total(self):
         # Проверка стоимости в корзине. Стоимость в корзине должна совпадать с ценой товара
@@ -41,3 +43,12 @@ class ProductPage(BasePage):
             alert.accept()
         except NoAlertPresentException:
             print("No second alert presented")
+
+    def should_not_be_success_message(self):
+        assert self.is_element_present(*ProductPageLocators.SUCCESS_MESSAGE) == False, \
+            "Success message is presented, but should not be"
+
+    def success_message_should_disappeared(self):
+        assert self.is_disappeared(*ProductPageLocators.SUCCESS_MESSAGE) == True, \
+            "Success message is not dissapeared, but should be"
+
