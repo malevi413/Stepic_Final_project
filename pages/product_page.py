@@ -7,32 +7,26 @@ import math
 class ProductPage(BasePage):
 
     def add_product_to_basket(self):
-
         button_add_to_basket = self.browser.find_element(*ProductPageLocators.BTN_ADD_TO_BASKET)
         button_add_to_basket.click()
 
     def should_be_message_about_adding(self):
-        # проверяем, что элементы присутствуют на странице
-        assert self.is_element_present(*ProductPageLocators.PRODUCT_NAME), (
-            "Product name is not presented")
-        assert self.is_element_present(*ProductPageLocators.MESSAGE_ABOUT_ADDING), (
-            "Message about adding is not presented")
-        product_name = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME).text
-        message = self.browser.find_element(*ProductPageLocators.MESSAGE_ABOUT_ADDING).text
         # Проверяем, что название товара присутствует в сообщении о добавлении
-        assert product_name in message, "No product name in the message"
+        product_name_page = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME).text
+        product_name_basket = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME_BASKET).text
+        assert product_name_basket == product_name_page, \
+            f"Product names in page and basket are not the same! {product_name_page} != {product_name_basket}"
+        # Проверяем, что название товара присутствует в сообщении о добавлении
+        # print(product_name_page)
+        # print(product_name_basket)
+
 
     def should_be_message_basket_total(self):
-        # проверяем, что элементы присутствуют на странице
-        assert self.is_element_present(*ProductPageLocators.MESSAGE_BASKET_TOTAL), (
-            "Message basket total is not presented")
-        assert self.is_element_present(*ProductPageLocators.PRODUCT_PRICE), (
-            "Product price is not presented")
-        # Затем получаем текст элементов для проверки
-        message_basket_total = self.browser.find_element(*ProductPageLocators.MESSAGE_BASKET_TOTAL).text
-        product_price = self.browser.find_element(*ProductPageLocators.PRODUCT_PRICE).text
-        # Проверяем, что цена товара присутствует в сообщении со стоимостью корзины
-        assert product_price in message_basket_total, "No product price in the message"
+        # Проверка стоимости в корзине. Стоимость в корзине должна совпадать с ценой товара
+        product_price = self.browser.find_element(*ProductPageLocators.PRODUCT_PRICE).text[1:]
+        basket_price = self.browser.find_element(*ProductPageLocators.BASKET_PRICE).text[1:]
+        assert product_price == basket_price, \
+            f"Product prices in page and basket are not the same! {product_price} != {basket_price}"
 
     def solve_quiz_and_get_code(self):
         alert = self.browser.switch_to.alert
@@ -47,11 +41,3 @@ class ProductPage(BasePage):
             alert.accept()
         except NoAlertPresentException:
             print("No second alert presented")
-
-    def get_book_name(self):
-        book_name = self.browser.find_element(*ProductPageLocators.BOOK_NAME).text
-        return book_name
-
-    def get_book_price(self):
-        book_price = self.browser.find_element(*ProductPageLocators.BOOK_PRICE).text
-        return book_price
