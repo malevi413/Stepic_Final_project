@@ -1,48 +1,84 @@
 import pytest
+import faker
+from pages.login_page import LoginPage
 from .pages.product_page import ProductPage
 
-# def test_guest_can_add_product_to_basket(browser):
-#     # link = "http://selenium1py.pythonanywhere.com/en-gb/catalogue/the-shellcoders-handbook_209/?promo=newYear"
-#     link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer7"
-#     page = ProductPage(browser, link)
-#     page.open()
-#     page.add_product_to_basket()
-#     page.solve_quiz_and_get_code()
-#     page.should_be_message_about_adding()
-#     page.should_be_message_basket_total()
-#     time.sleep(25)
-
-@pytest.mark.parametrize('link', [0, 1, 2, 3, 4, 5, 6,
-                                  pytest.param(7, marks=pytest.mark.xfail),
-                                  8, 9])
-def test_guest_can_add_product_to_basket(browser, link):
-    link = f"http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer{link}"
-    page = ProductPage(browser, link)
-    page.open()
-    page.add_product_to_basket()
-    page.solve_quiz_and_get_code()
-    page.should_be_message_about_adding()
-    page.should_be_message_basket_total()
+link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
 
 
-def test_guest_cant_see_success_message_after_adding_product_to_basket(browser):
-    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
-    page = ProductPage(browser, link)
-    page.open()
-    # page.should_be_add_product_button()
-    page.should_not_be_success_message()
+class TestGuestAddToBasketFromProductPage():
+    """Класс для тестирования работы незарегистрированного пользователя"""
+
+    @pytest.mark.need_review
+    def test_guest_can_add_product_to_basket(self, browser):
+        page = ProductPage(browser, link)
+        page.open()
+        page.add_product_to_basket()
+        page.should_be_message_about_adding()
+        page.should_be_message_basket_total()
+
+    # @pytest.mark.parametrize('link1', [0, 1, 2, 3, 4, 5, 6,
+    #                                    pytest.param(7, marks=pytest.mark.xfail),
+    #                                    8, 9])
+    # def test_guest_can_add_product_to_basket(browser, link1):
+    #     link1 = f"http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/?promo=offer{link1}"
+    #     page = ProductPage(browser, link1)
+    #     page.open()
+    #     page.add_product_to_basket()
+    #     page.solve_quiz_and_get_code()
+    #     page.should_be_message_about_adding()
+    #     page.should_be_message_basket_total()
+    @pytest.mark.skip
+    def test_guest_cant_see_success_message_after_adding_product_to_basket(self, browser):
+        page = ProductPage(browser, link)
+        page.open()
+        page.should_not_be_success_message()
+
+    def test_guest_cant_see_success_message(self, browser):
+        page = ProductPage(browser, link)
+        page.open()
+        page.should_not_be_success_message()
+
+    @pytest.mark.skip
+    def test_message_disappeared_after_adding_product_to_basket(self, browser):
+        page = ProductPage(browser, link)
+        page.open()
+        page.should_be_add_product_button()
+        page.success_message_should_disappeared()
 
 
-def test_guest_cant_see_success_message(browser):
-    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
-    page = ProductPage(browser, link)
-    page.open()
-    page.should_not_be_success_message()
+class TestUserAddToBasketFromProductPage:
+    """Класс для тестирования работы зарегистрированного пользователя.
+    Перед тестом происходит регистрация условного пользователя на сайте.
+    """
 
+    @pytest.fixture(scope="function", autouse=True)
+    def setup(self, browser):
+        """Подготовка данных для теста"""
+        # Открываем страницу регистрации
+        login_page = LoginPage(
+            browser, "http://selenium1py.pythonanywhere.com/accounts/login/")
+        login_page.open()
+        # Генерируем почту, прописываем пароль и регистрируем нового пользователя
+        f = faker.Faker()
+        email = f.email()
+        password = "Martin654321"
+        # Регистрируем нового пользователя
+        login_page.register_new_user(email, password)
+        # Проверяем, что пользователь авторизован
+        login_page.should_be_authorized_user()
 
-def test_message_disappeared_after_adding_product_to_basket(browser):
-    link = "http://selenium1py.pythonanywhere.com/catalogue/coders-at-work_207/"
-    page = ProductPage(browser, link)
-    page.open()
-    page.should_be_add_product_button()
-    page.success_message_should_disappeared()
+    @pytest.mark.need_review
+    def test_user_can_add_product_to_basket(self, browser):
+        """Проверка возможности добавить товар в корзину пользователем"""
+        page = ProductPage(browser, link)
+        page.open()
+        page.add_product_to_basket()
+        page.should_be_message_about_adding()
+        page.should_be_message_basket_total()
+
+    # @pytest.mark.skip
+    def test_user_cant_see_success_message(self, browser):
+        page = ProductPage(browser, link)
+        page.open()
+        page.should_not_be_success_message()

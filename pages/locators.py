@@ -5,16 +5,19 @@ class MainPageLocators():
     LOGIN_LINK = (By.CSS_SELECTOR, "#login_link")
 
 
-class LoginPageLocators():
-    LOGIN_MAIL_AUTH = (By.NAME, "login-username")
-    LOGIN_PASS_AUTH = (By.NAME, "login-password")
-    BTN_FORGET_PASS = (By.LINK_TEXT, "Я забыл пароль")
-    LOGIN_ENTER = (By.NAME, "login_submit")
+class BasePageLocators():
+    USER_ICON = (By.CSS_SELECTOR, ".icon-user")
 
-    LOGIN_MAIL_REG = (By.NAME, "registration-email")
-    LOGIN_PASS_REG = (By.NAME, "registration-password1")
-    LOGIN_PASS_REG_2 = (By.NAME, "registration-password2")
+
+class LoginPageLocators():
     LOGIN_ENTER_REG = (By.NAME, "registration_submit")
+    LOGIN_LINK = (By.CSS_SELECTOR, "#login_link")
+    EMAIL = (By.CSS_SELECTOR, "#id_registration-email")
+    PASSWORD = (By.CSS_SELECTOR, "#id_registration-password1")
+    CONFIRM_PASSWORD = (By.CSS_SELECTOR, "#id_registration-password2")
+    REG_BTN = (By.NAME, "registration_submit")
+    LOGIN_FORM = (By.CSS_SELECTOR, "#login_form")
+    REGISTER_FORM = (By.CSS_SELECTOR, "#register_form")
 
 
 class ProductPageLocators():

@@ -13,7 +13,6 @@ class ProductPage(BasePage):
     def should_be_add_product_button(self):
         assert self.is_element_present(*ProductPageLocators.BTN_ADD_TO_BASKET), "Add button is not presented"
 
-
     def should_be_message_about_adding(self):
         # Проверяем, что название товара присутствует в сообщении о добавлении
         product_name_page = self.browser.find_element(*ProductPageLocators.PRODUCT_NAME).text
@@ -51,4 +50,3 @@ class ProductPage(BasePage):
     def success_message_should_disappeared(self):
         assert self.is_disappeared(*ProductPageLocators.SUCCESS_MESSAGE) == True, \
             "Success message is not dissapeared, but should be"
-
