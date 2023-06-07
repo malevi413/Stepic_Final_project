@@ -44,9 +44,19 @@ class ProductPage(BasePage):
             print("No second alert presented")
 
     def should_not_be_success_message(self):
-        assert self.is_element_present(*ProductPageLocators.SUCCESS_MESSAGE) == False, \
-            "Success message is presented, but should not be"
+        """Ожидаем, что сообщение о добавлении не появится"""
+
+        assert self.is_not_element_present(
+            *ProductPageLocators.SUCCESS_MESSAGE), "Success message is presented, but should not be"
 
     def success_message_should_disappeared(self):
         assert self.is_disappeared(*ProductPageLocators.SUCCESS_MESSAGE) == True, \
             "Success message is not dissapeared, but should be"
+
+    def go_to_basket_page(self):
+        """Переход в корзину
+        """
+
+        basket_link = self.browser.find_element(
+            *ProductPageLocators.BASKET_LINK)
+        basket_link.click()

@@ -28,3 +28,7 @@ class ProductPageLocators():
     BASKET_PRICE = (By.CSS_SELECTOR, "div.alertinner > p > strong ")
     PRODUCT_NAME_BASKET = (By.CSS_SELECTOR, "div.alertinner > strong")
     SUCCESS_MESSAGE = (By.CSS_SELECTOR, "#messages > div:nth-child(1) > div")
+    BASKET_LINK = (By.CSS_SELECTOR, "div.basket-mini span.btn-group a.btn")
+
+class BasketPageLocators():
+    BASKET_CONTENT = (By.CSS_SELECTOR, "#content_inner p")

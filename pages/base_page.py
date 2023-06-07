@@ -1,8 +1,8 @@
 from telnetlib import EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
-
-from pages.locators import BasePageLocators
+from selenium.webdriver.support import expected_conditions as EC
+from pages.locators import BasePageLocators, MainPageLocators
 
 
 class BasePage:
@@ -15,6 +15,8 @@ class BasePage:
         self.browser.get(self.url)
 
     def is_element_present(self, how, what):
+        """Проверяем, что искомый элемент есть на текущей странице"""
+
         try:
             self.browser.find_element(how, what)
         except NoSuchElementException:
@@ -22,6 +24,7 @@ class BasePage:
         return True
 
     def is_not_element_present(self, how, what, timeout=4):
+        """Проверяем, что искомый элемент отсутствует на текущей странице и не появляется в течении времени"""
         try:
             WebDriverWait(self.browser, timeout).until(
                 EC.presence_of_element_located((how, what))
@@ -32,8 +35,9 @@ class BasePage:
         return False
 
     def is_disappeared(self, how, what, timeout=4):
+        """Проверяем, что искомый элемент исчезает в течении времени"""
         try:
-            WebDriverWait(self.browser, timeout, 1, TimeoutException).\
+            WebDriverWait(self.browser, timeout, 1, TimeoutException). \
                 until_not(EC.presence_of_element_located((how, what)))
         except TimeoutException:
             return False
@@ -41,5 +45,12 @@ class BasePage:
         return True
 
     def should_be_authorized_user(self):
+        """Проверяем, что пользователь авторизован"""
         assert self.is_element_present(*BasePageLocators.USER_ICON), "User icon is not presented," \
                                                                      " probably unauthorised user"
+
+    def go_to_login_page(self):
+        """Нажимаем на ссылку для регистрации"""
+
+        login_link = self.browser.find_element(*MainPageLocators.LOGIN_LINK)
+        login_link.click()
