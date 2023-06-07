@@ -2,7 +2,7 @@ from telnetlib import EC
 from selenium.common.exceptions import NoSuchElementException, TimeoutException
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from pages.locators import BasePageLocators, MainPageLocators
+from .locators import BasePageLocators, MainPageLocators
 
 
 class BasePage:
