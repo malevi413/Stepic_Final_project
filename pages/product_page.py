@@ -49,9 +49,11 @@ class ProductPage(BasePage):
         assert self.is_not_element_present(
             *ProductPageLocators.SUCCESS_MESSAGE), "Success message is presented, but should not be"
 
-    def success_message_should_disappeared(self):
-        assert self.is_disappeared(*ProductPageLocators.SUCCESS_MESSAGE) == True, \
-            "Success message is not dissapeared, but should be"
+    def should_be_disappeared_success_message(self):
+        """Ожидаем, что сообщение о добавлении исчезнет"""
+
+        assert self.is_disappeared(
+            *ProductPageLocators.SUCCESS_MESSAGE), "Success message is presented, but should be disappeared"
 
     def go_to_basket_page(self):
         """Переход в корзину
